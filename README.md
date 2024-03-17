@@ -35,8 +35,3 @@ for  backend
 ```bash
 npx convex dev
 ```
-
-
-## License
-
-MIT
