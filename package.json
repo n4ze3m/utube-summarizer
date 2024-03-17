@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
+    "@langchain/anthropic": "^0.1.8",
     "@langchain/community": "^0.0.40",
     "@langchain/core": "^0.1.48",
     "@radix-ui/react-label": "^2.0.2",
