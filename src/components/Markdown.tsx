@@ -10,7 +10,7 @@ export default function Markdown({ message }: { message: string }) {
   return (
     <React.Fragment>
       <ReactMarkdown
-        className="prose dark:prose-dark max-w-none w-full  dark:text-gray-300 text-gray-700"
+        className="prose dark:prose-invert max-w-none w-full  dark:text-gray-300 text-gray-700"
         remarkPlugins={[remarkGfm, remarkMath]}
         rehypePlugins={[rehypeMathjax]}
       >
