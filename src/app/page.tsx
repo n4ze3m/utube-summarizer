@@ -29,14 +29,14 @@ export default async function Home() {
             <PinnedSummary preloadData={data} />
           </div>
 
-          <div className="text-right">
+          {/* <div className="text-right">
             <Link
               href="/recent"
               className="text-neutral-500 border border-neutral-400 p-2 rounded-md text-center"
             >
               View all
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </main>
