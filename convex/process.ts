@@ -44,52 +44,51 @@ export const processYoutubeAction = internalAction({
         video_id: v.string(),
     },
     handler: async (ctx, args) => {
-        try {
-            const info = await getYoutubeInfo(args.video_id)
+        const info = await getYoutubeInfo(args.video_id)
 
-            if (!process.env.FIREWORKS_API_KEY && !process.env.ANTHROPIC_API_KEY) {
+        if (!process.env.FIREWORKS_API_KEY && !process.env.ANTHROPIC_API_KEY) {
 
-                await ctx.runMutation(internal.youtube.updateYoutube, {
-                    id: args.id,
-                    is_error: true,
-                    error_message: "FIREWORKS_API_KEY and ANTHROPIC_API_KEY is not set",
-                    title: info.title,
-                    thumbnail_url: info.thumbnail_url
-                })
-                throw new Error("FIREWORKS_API_KEY is not set")
-            }
-
-
-            const transcript = new YtTranscript({ videoId: args.video_id })
-
-            const transcriptText = await transcript.getTranscript()
-
-            if (!transcriptText) {
-                await ctx.runMutation(internal.youtube.updateYoutube, {
-                    id: args.id,
-                    is_error: true,
-                    error_message: "Transcript not found",
-                    title: info.title,
-                    thumbnail_url: info.thumbnail_url
-
-                })
-                throw new Error("Transcript not found")
-            }
-
-            if (transcriptText.length === 0) {
-                await ctx.runMutation(internal.youtube.updateYoutube, {
-                    id: args.id,
-                    is_error: true,
-                    error_message: "Transcript is empty or not available",
-                    title: info.title,
-                    thumbnail_url: info.thumbnail_url
-
-                })
-                throw new Error("Transcript is empty")
-            }
+            await ctx.runMutation(internal.youtube.updateYoutube, {
+                id: args.id,
+                is_error: true,
+                error_message: "FIREWORKS_API_KEY and ANTHROPIC_API_KEY is not set",
+                title: info.title,
+                thumbnail_url: info.thumbnail_url
+            })
+            throw new Error("FIREWORKS_API_KEY is not set")
+        }
 
 
-            const prompt = PromptTemplate.fromTemplate(`You are a youtube transcript summarizer. Use the following rules to summarize the transcript.
+        const transcript = new YtTranscript({ videoId: args.video_id })
+
+        const transcriptText = await transcript.getTranscript()
+
+        if (!transcriptText) {
+            await ctx.runMutation(internal.youtube.updateYoutube, {
+                id: args.id,
+                is_error: true,
+                error_message: "Transcript not found",
+                title: info.title,
+                thumbnail_url: info.thumbnail_url
+
+            })
+            throw new Error("Transcript not found")
+        }
+
+        if (transcriptText.length === 0) {
+            await ctx.runMutation(internal.youtube.updateYoutube, {
+                id: args.id,
+                is_error: true,
+                error_message: "Transcript is empty or not available",
+                title: info.title,
+                thumbnail_url: info.thumbnail_url
+
+            })
+            throw new Error("Transcript is empty")
+        }
+
+
+        const prompt = PromptTemplate.fromTemplate(`You are a youtube transcript summarizer. Use the following rules to summarize the transcript.
 
 
 1. Must be detailed and accurate to the original content.
@@ -111,16 +110,17 @@ export const processYoutubeAction = internalAction({
 
 Summary:
 `)
-            const transcriptData = transcriptText.map(t => `[${t.start}-${t.duration}] ${t.text}`).join("\n")
-
-      
-
-            const model = getModel(transcriptData)
-
-            const stringOutputParser = new StringOutputParser()
+        const transcriptData = transcriptText.map(t => `[${t.start}-${t.duration}] ${t.text}`).join("\n")
 
 
-            const chain = prompt.pipe(model).pipe(stringOutputParser)
+
+        const model = getModel(transcriptData)
+
+        const stringOutputParser = new StringOutputParser()
+
+
+        const chain = prompt.pipe(model).pipe(stringOutputParser)
+        try {
 
             const result = await chain.invoke({ transcript: transcriptData })
 
