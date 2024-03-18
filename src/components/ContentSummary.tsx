@@ -21,13 +21,13 @@ export const Summary = ({
 }) => {
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-3xl font-bold">{title}</h1>
+      <h1 className="sm:text-3xl text-lg font-bold">{title}</h1>
       <iframe
-        width="400"
         height="200"
         src={`https://www.youtube.com/embed/${video_id}`}
         title={title}
         frameBorder="0"
+        className="sm:w-[400px] w-full h-200"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
       ></iframe>
