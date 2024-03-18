@@ -8,7 +8,7 @@ export default async function Home() {
   const data = await preloadQuery(api.youtube.getHighlights);
 
   return (
-    <main className="sm:p-24 ssm:p-12 p-5">
+    <main className="sm:p-24 p-5">
       <div className="sm:max-w-3xl mx-auto ">
         <h1 className="sm:text-4xl text-xl font-bold text-center tracking-tight text-neutral-100">
           Quikly Summarize Youtube Videos
