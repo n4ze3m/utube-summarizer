@@ -2,17 +2,11 @@
 
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "./ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useMutation } from "convex/react";
+import { Preloaded, useMutation, usePreloadedQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -35,8 +29,14 @@ const formSchema = z.object({
       }
     ),
 });
-export const UTubeForm = () => {
+
+type Props = {
+  preloadData: Preloaded<typeof api.youtube.getHighlights>;
+};
+export const UTubeForm = ({ preloadData }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
+  const data = usePreloadedQuery(preloadData);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,7 +57,7 @@ export const UTubeForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="mt-12 space-y-4 text-center"
+        className="mt-12 flex flex-col space-y-4 text-center"
       >
         <FormField
           control={form.control}
@@ -71,6 +71,7 @@ export const UTubeForm = () => {
             </FormItem>
           )}
         />{" "}
+        <div className="flex justify-center">
         <Button className="gap-2" disabled={isLoading} type="submit">
           {isLoading ? (
             <RefreshCcw className="animate-spin h-5 w-5" />
@@ -79,6 +80,10 @@ export const UTubeForm = () => {
           )}
           {isLoading ? "Processing..." : "Summarize Video"}
         </Button>
+        </div>
+        <span className="text-gray-500 text-center text-xs">
+          {data.totalVideos} videos summarized so far
+        </span>
       </form>
     </Form>
   );

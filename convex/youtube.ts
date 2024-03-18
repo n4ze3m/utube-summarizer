@@ -15,10 +15,14 @@ export const getYoutubeSummaryById = query({
 })
 
 
-export const getPinnedVideos = query({
+export const getHighlights = query({
     handler: async (ctx) => {
         const youtube = await ctx.db.query("youtube").filter((q) => q.eq(q.field("pinned"), true)).order("desc").take(3)
-        return youtube
+        const totalVideos = await ctx.db.query("youtube").filter((q) => q.eq(q.field("is_finished"), true)).collect()
+        return {
+            youtube,
+            totalVideos: totalVideos.length
+        }
     }
 })
 

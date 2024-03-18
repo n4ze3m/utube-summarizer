@@ -5,19 +5,19 @@ import { api } from "../../convex/_generated/api";
 import Link from "next/link";
 
 export default async function Home() {
-  const data = await preloadQuery(api.youtube.getPinnedVideos);
+  const data = await preloadQuery(api.youtube.getHighlights);
 
   return (
-    <main className="sm:p-24 p-12">
+    <main className="sm:p-24 ssm:p-12 p-5">
       <div className="sm:max-w-3xl mx-auto ">
-        <h1 className="sm:text-4xl text-lg font-bold text-center tracking-tight text-neutral-100">
+        <h1 className="sm:text-4xl text-xl font-bold text-center tracking-tight text-neutral-100">
           Quikly Summarize Youtube Videos
         </h1>
-        <p className="mt-6 sm:text-sm text-xs text-center text-gray-500">
+        <p className="mt-6 sm:text-sm text-center text-gray-500">
           Turn lengthy YouTube videos into concise summaries. Perfect for
           lectures, events, or meetings. Made possible by AI technology
         </p>
-        <UTubeForm />
+        <UTubeForm preloadData={data} />
 
         {/* recent  */}
 
