@@ -5,10 +5,8 @@ import { Input } from "./ui/input";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "./ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,12 +51,14 @@ export const UTubeForm = () => {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     const youtube = await onProcessVideo(data);
-    setIsLoading(false);
     router.push(`/summary/${youtube}`);
   };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="mt-12 space-y-4 text-center">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="mt-12 space-y-4 text-center"
+      >
         <FormField
           control={form.control}
           name="url"
